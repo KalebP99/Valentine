@@ -6,149 +6,183 @@
 <title>A Letter from Hallownest</title>
 
 <style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: radial-gradient(circle at top, #0f1a2b, #05080f 70%);
-  font-family: Arial, sans-serif;
-  color:#e6f2ff;
-  overflow:hidden;
-}
+  :root{
+    --bg1:#0f1a2b;
+    --bg2:#05080f;
+    --glow:rgba(150,200,255,0.35);
+    --text:#e6f2ff;
+  }
 
-/* Background silhouettes */
-.bg-knight, .bg-hornet{
-  position:absolute;
-  bottom:0;
-  width:260px;
-  opacity:0.15;
-  filter: drop-shadow(0 0 25px rgba(150,200,255,0.4));
-}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: radial-gradient(circle at top, var(--bg1), var(--bg2) 70%);
+    font-family: Arial, sans-serif;
+    color:var(--text);
+    overflow:hidden;
+  }
 
-.bg-knight{ left:5%; }
-.bg-hornet{ right:5%; }
+  /* ====== Ambient particles canvas ====== */
+  #dust{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
 
-/* Envelope */
-.envelope-container{
-  text-align:center;
-  cursor:pointer;
-  transition: transform 0.3s ease;
-}
+  /* Background silhouettes */
+  .bg-knight, .bg-hornet{
+    position:absolute;
+    bottom:0;
+    width:260px;
+    opacity:0.16;
+    filter: drop-shadow(0 0 25px var(--glow));
+    z-index:1;
+    pointer-events:none;
+  }
+  .bg-knight{ left:5%; }
+  .bg-hornet{ right:5%; }
 
-.envelope-container:hover{
-  transform: scale(1.05);
-}
+  /* Envelope */
+  .envelope-container{
+    text-align:center;
+    cursor:pointer;
+    transition: transform 0.3s ease;
+    z-index:2;
+    user-select:none;
+  }
+  .envelope-container:hover{ transform: scale(1.05); }
 
-.envelope{
-  width:200px;
-  height:130px;
-  background:#cfe9ff;
-  position:relative;
-  border-radius:6px;
-  box-shadow:0 0 20px rgba(150,200,255,0.3);
-}
+  .envelope{
+    width:210px;
+    height:135px;
+    background:#cfe9ff;
+    position:relative;
+    border-radius:8px;
+    box-shadow:0 0 20px rgba(150,200,255,0.28);
+    overflow:hidden;
+  }
+  .flap{
+    position:absolute;
+    width:0;
+    height:0;
+    border-left:105px solid transparent;
+    border-right:105px solid transparent;
+    border-bottom:72px solid #a5d8ff;
+    top:-72px;
+    left:0;
+    transition: transform 0.6s ease;
+    transform-origin:bottom;
+  }
+  .open .flap{ transform: rotateX(180deg); }
 
-.flap{
-  position:absolute;
-  width:0;
-  height:0;
-  border-left:100px solid transparent;
-  border-right:100px solid transparent;
-  border-bottom:70px solid #a5d8ff;
-  top:-70px;
-  left:0;
-  transition: transform 0.6s ease;
-  transform-origin:bottom;
-}
+  /* Letter Card */
+  .card{
+    width:min(680px, 92%);
+    background: rgba(20,30,45,0.85);
+    border:1px solid rgba(150,200,255,0.2);
+    border-radius:18px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(100,150,255,0.15);
+    display:none;
+    animation: fadeIn 1s ease forwards;
+    position:relative;
+    z-index:2;
+  }
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+  }
 
-.open .flap{
-  transform: rotateX(180deg);
-}
+  h1{ text-shadow:0 0 15px var(--glow); margin:0 0 12px; }
 
-/* Letter Card */
-.card{
-  width:min(650px, 90%);
-  background: rgba(20,30,45,0.85);
-  border:1px solid rgba(150,200,255,0.2);
-  border-radius:18px;
-  padding:28px;
-  text-align:center;
-  box-shadow:0 0 40px rgba(100,150,255,0.15);
-  display:none;
-  animation: fadeIn 1s ease forwards;
-}
+  .letter{
+    background: rgba(0,0,0,0.35);
+    border:1px solid rgba(150,200,255,0.15);
+    border-radius:14px;
+    padding:18px;
+    font-size:16px;
+    line-height:1.6;
+  }
+  .ask{ margin-top:14px; font-size:20px; font-weight:bold; }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
-}
+  .btns{
+    margin-top:14px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    position:relative;
+  }
 
-h1{
-  text-shadow:0 0 15px rgba(150,200,255,0.4);
-}
+  button{
+    border:none;
+    border-radius:999px;
+    padding:12px 18px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:15px;
+    position:relative;
+    transition: transform .08s ease, filter .2s ease;
+  }
+  button:active{ transform: translateY(1px) scale(.99); }
 
-.letter{
-  background: rgba(0,0,0,0.35);
-  border:1px solid rgba(150,200,255,0.15);
-  border-radius:14px;
-  padding:18px;
-  font-size:16px;
-  line-height:1.6;
-}
+  .yes{
+    background: linear-gradient(90deg, #7cc7ff, #cfe9ff);
+    color:#000;
+  }
+  .yes:hover{ filter: brightness(1.05); }
 
-.ask{
-  margin-top:14px;
-  font-size:20px;
-  font-weight:bold;
-}
+  .no{
+    background: rgba(255,255,255,0.10);
+    color:var(--text);
+    border:1px solid rgba(255,255,255,0.18);
+  }
 
-.btns{
-  margin-top:14px;
-  display:flex;
-  gap:12px;
-  justify-content:center;
-}
+  #msg{ margin-top:10px; min-height:20px; }
 
-button{
-  border:none;
-  border-radius:999px;
-  padding:12px 18px;
-  font-weight:700;
-  cursor:pointer;
-  font-size:15px;
-}
+  /* Yes-burst particles */
+  .burst{
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#cfe9ff;
+    pointer-events:none;
+    box-shadow: 0 0 10px rgba(207,233,255,.35);
+    animation: burst 800ms ease-out forwards;
+  }
+  @keyframes burst{
+    from{ opacity:1; transform: translate(0,0) scale(1); }
+    to{ opacity:0; transform: translate(var(--x), var(--y)) scale(0.35); }
+  }
 
-.yes{
-  background: linear-gradient(90deg, #7cc7ff, #cfe9ff);
-  color:#000;
-}
-
-.no{
-  background: rgba(255,255,255,0.1);
-  color:#e6f2ff;
-  border:1px solid rgba(255,255,255,0.2);
-}
-
-#msg{
-  margin-top:10px;
-}
+  .hint{
+    opacity:.85;
+    margin-top:10px;
+    font-size:13px;
+    text-shadow:0 0 10px rgba(150,200,255,0.12);
+  }
 </style>
 </head>
 
 <body>
+<canvas id="dust"></canvas>
 
 <!-- Background Images -->
-<img src="knight.png" class="bg-knight">
-<img src="hornet.png" class="bg-hornet">
+<img src="knight.png" class="bg-knight" alt="">
+<img src="hornet.png" class="bg-hornet" alt="">
 
 <!-- Envelope -->
-<div class="envelope-container" id="envelopeContainer">
+<div class="envelope-container" id="envelopeContainer" aria-label="Open letter">
   <div class="envelope" id="envelope">
     <div class="flap"></div>
   </div>
-  <p>Click to open 🕯️</p>
+  <p class="hint">Click to open 🕯️</p>
 </div>
 
 <!-- Letter -->
@@ -162,33 +196,160 @@ button{
     <div class="ask">Will you be my Valentine? 💙</div>
   </div>
 
-  <div class="btns">
+  <div class="btns" id="btns">
     <button class="yes" id="yesBtn">Yes 💫</button>
-    <button class="no">No 🖤</button>
+    <button class="no" id="noBtn">No 🖤</button>
   </div>
 
   <div id="msg"></div>
 </div>
 
 <script>
+/* =========================
+   1) Envelope -> show letter
+========================= */
 const envelopeContainer = document.getElementById("envelopeContainer");
 const envelope = document.getElementById("envelope");
 const card = document.getElementById("card");
-const yesBtn = document.getElementById("yesBtn");
-const msg = document.getElementById("msg");
 
 envelopeContainer.addEventListener("click", () => {
   envelope.classList.add("open");
-
   setTimeout(() => {
     envelopeContainer.style.display = "none";
     card.style.display = "block";
   }, 700);
 });
 
+/* =========================
+   2) YES button burst effect
+========================= */
+const yesBtn = document.getElementById("yesBtn");
+const msg = document.getElementById("msg");
+
+function burstFrom(el, count = 28){
+  const elRect = el.getBoundingClientRect();
+  const parentRect = card.getBoundingClientRect();
+
+  const centerX = elRect.left - parentRect.left + elRect.width / 2;
+  const centerY = elRect.top  - parentRect.top  + elRect.height / 2;
+
+  for(let i=0; i<count; i++){
+    const p = document.createElement("div");
+    p.className = "burst";
+    const x = (Math.random() - 0.5) * 220 + "px";
+    const y = (Math.random() - 0.5) * -220 + "px";
+    p.style.setProperty("--x", x);
+    p.style.setProperty("--y", y);
+    p.style.left = centerX + "px";
+    p.style.top  = centerY + "px";
+    card.appendChild(p);
+    setTimeout(() => p.remove(), 850);
+  }
+}
+
 yesBtn.addEventListener("click", () => {
-  msg.textContent = "Our souls are bound together now 💙✨";
+  burstFrom(yesBtn, 34);
+  yesBtn.disabled = true;
+  yesBtn.style.opacity = "0.85";
+  setTimeout(() => { msg.textContent = "Our souls are bound together now 💙✨"; }, 250);
 });
+
+/* =========================
+   3) Floating/escaping NO button
+========================= */
+const noBtn = document.getElementById("noBtn");
+const btns = document.getElementById("btns");
+
+// Keep it from running off-screen too far:
+function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+function dodge(){
+  // Move within a box around its normal position
+  const dx = (Math.random()*260 - 130);
+  const dy = (Math.random()*160 - 80);
+
+  // If screen is small, reduce movement
+  const scale = Math.max(0.6, Math.min(1, window.innerWidth / 800));
+  const ndx = dx * scale;
+  const ndy = dy * scale;
+
+  noBtn.style.transform = `translate(${ndx}px, ${ndy}px)`;
+}
+
+// On hover OR on click, it dodges
+noBtn.addEventListener("mouseenter", dodge);
+noBtn.addEventListener("mousedown", (e) => { e.preventDefault(); dodge(); });
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  msg.textContent = "…That choice fades into shadow 😌";
+});
+
+/* =========================
+   4) Ambient Hallownest dust particles (canvas)
+========================= */
+const canvas = document.getElementById("dust");
+const ctx = canvas.getContext("2d");
+
+let W, H, DPR;
+function resize(){
+  DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+  W = canvas.width  = Math.floor(window.innerWidth  * DPR);
+  H = canvas.height = Math.floor(window.innerHeight * DPR);
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = window.innerHeight + "px";
+}
+window.addEventListener("resize", resize);
+resize();
+
+const motes = [];
+const MOTE_COUNT = 70;
+
+function rand(min, max){ return Math.random() * (max - min) + min; }
+
+for(let i=0; i<MOTE_COUNT; i++){
+  motes.push({
+    x: rand(0, W),
+    y: rand(0, H),
+    r: rand(0.8, 2.2) * DPR,
+    a: rand(0.08, 0.22),
+    vx: rand(-0.12, 0.12) * DPR,
+    vy: rand(-0.35, -0.10) * DPR, // drift upward
+    tw: rand(0.002, 0.01),
+    t: rand(0, 1000)
+  });
+}
+
+function step(){
+  ctx.clearRect(0,0,W,H);
+
+  for(const m of motes){
+    m.t += 1;
+    // subtle twinkle
+    const alpha = m.a + Math.sin(m.t * m.tw) * 0.03;
+
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(207,233,255,${alpha})`;
+    ctx.fill();
+
+    // glow
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, m.r*2.2, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(150,200,255,${alpha*0.25})`;
+    ctx.fill();
+
+    m.x += m.vx;
+    m.y += m.vy;
+
+    // wrap around
+    if(m.y < -10*DPR) m.y = H + 10*DPR;
+    if(m.x < -10*DPR) m.x = W + 10*DPR;
+    if(m.x > W + 10*DPR) m.x = -10*DPR;
+  }
+
+  requestAnimationFrame(step);
+}
+step();
 </script>
 
 </body>
