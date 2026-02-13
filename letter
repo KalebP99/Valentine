@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Letter from Hallownest</title>
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: radial-gradient(circle at top, #0f1a2b, #05080f 70%);
+  font-family: Arial, sans-serif;
+  color:#e6f2ff;
+  overflow:hidden;
+}
+
+/* Background silhouettes */
+.bg-knight, .bg-hornet{
+  position:absolute;
+  bottom:0;
+  width:260px;
+  opacity:0.15;
+  filter: drop-shadow(0 0 25px rgba(150,200,255,0.4));
+}
+
+.bg-knight{ left:5%; }
+.bg-hornet{ right:5%; }
+
+/* Envelope */
+.envelope-container{
+  text-align:center;
+  cursor:pointer;
+  transition: transform 0.3s ease;
+}
+
+.envelope-container:hover{
+  transform: scale(1.05);
+}
+
+.envelope{
+  width:200px;
+  height:130px;
+  background:#cfe9ff;
+  position:relative;
+  border-radius:6px;
+  box-shadow:0 0 20px rgba(150,200,255,0.3);
+}
+
+.flap{
+  position:absolute;
+  width:0;
+  height:0;
+  border-left:100px solid transparent;
+  border-right:100px solid transparent;
+  border-bottom:70px solid #a5d8ff;
+  top:-70px;
+  left:0;
+  transition: transform 0.6s ease;
+  transform-origin:bottom;
+}
+
+.open .flap{
+  transform: rotateX(180deg);
+}
+
+/* Letter Card */
+.card{
+  width:min(650px, 90%);
+  background: rgba(20,30,45,0.85);
+  border:1px solid rgba(150,200,255,0.2);
+  border-radius:18px;
+  padding:28px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(100,150,255,0.15);
+  display:none;
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+h1{
+  text-shadow:0 0 15px rgba(150,200,255,0.4);
+}
+
+.letter{
+  background: rgba(0,0,0,0.35);
+  border:1px solid rgba(150,200,255,0.15);
+  border-radius:14px;
+  padding:18px;
+  font-size:16px;
+  line-height:1.6;
+}
+
+.ask{
+  margin-top:14px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.btns{
+  margin-top:14px;
+  display:flex;
+  gap:12px;
+  justify-content:center;
+}
+
+button{
+  border:none;
+  border-radius:999px;
+  padding:12px 18px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.yes{
+  background: linear-gradient(90deg, #7cc7ff, #cfe9ff);
+  color:#000;
+}
+
+.no{
+  background: rgba(255,255,255,0.1);
+  color:#e6f2ff;
+  border:1px solid rgba(255,255,255,0.2);
+}
+
+#msg{
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Images -->
+<img src="knight.png" class="bg-knight">
+<img src="hornet.png" class="bg-hornet">
+
+<!-- Envelope -->
+<div class="envelope-container" id="envelopeContainer">
+  <div class="envelope" id="envelope">
+    <div class="flap"></div>
+  </div>
+  <p>Click to open 🕯️</p>
+</div>
+
+<!-- Letter -->
+<div class="card" id="card">
+  <h1>In the Quiet of Hallownest</h1>
+
+  <div class="letter">
+    <p>In this dark and gentle world,</p>
+    <p>You are the light I find.</p>
+    <p>So I have one simple question…</p>
+    <div class="ask">Will you be my Valentine? 💙</div>
+  </div>
+
+  <div class="btns">
+    <button class="yes" id="yesBtn">Yes 💫</button>
+    <button class="no">No 🖤</button>
+  </div>
+
+  <div id="msg"></div>
+</div>
+
+<script>
+const envelopeContainer = document.getElementById("envelopeContainer");
+const envelope = document.getElementById("envelope");
+const card = document.getElementById("card");
+const yesBtn = document.getElementById("yesBtn");
+const msg = document.getElementById("msg");
+
+envelopeContainer.addEventListener("click", () => {
+  envelope.classList.add("open");
+
+  setTimeout(() => {
+    envelopeContainer.style.display = "none";
+    card.style.display = "block";
+  }, 700);
+});
+
+yesBtn.addEventListener("click", () => {
+  msg.textContent = "Our souls are bound together now 💙✨";
+});
+</script>
+
+</body>
+</html>
